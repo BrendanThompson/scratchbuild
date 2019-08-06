@@ -16,6 +16,7 @@ import (
 // the client Options. If authentication is needed for your repository, call Auth
 // before calling BuildImage
 func (c *Client) Auth() (string, error) {
+
 	// First do an empty get to get the auth challenge
 	req, err := http.NewRequest(http.MethodGet, c.BaseURL+"/v2/", nil)
 	if err != nil {
@@ -25,6 +26,7 @@ func (c *Client) Auth() (string, error) {
 	if err != nil {
 		return "", errors.Wrap(err, "failed sending auth request")
 	}
+
 	defer rsp.Body.Close()
 	io.Copy(ioutil.Discard, rsp.Body)
 
@@ -75,7 +77,7 @@ func (c *Client) Auth() (string, error) {
 	}
 
 	type token struct {
-		Token string `json:"token"`
+		Token string `json:"access_token"`
 	}
 	var tok token
 	if err := json.Unmarshal(body, &tok); err != nil {
